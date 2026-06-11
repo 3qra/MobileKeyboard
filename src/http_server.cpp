@@ -70,6 +70,14 @@ constexpr char kIndexHtml[] =
     "<button type=\"submit\" formaction=\"/key/WIN+R\">Win+R</button>"
     "<button type=\"submit\" formaction=\"/key/CTRL+ALT+DELETE\">Ctrl+Alt+Delete</button>"
     "</div>"
+    "<div class=\"row\">"
+    "<button type=\"submit\" formaction=\"/key/HANKAKU_ZENKAKU\">半角/全角</button>"
+    "<button type=\"submit\" formaction=\"/key/KANA\">かな</button>"
+    "<button type=\"submit\" formaction=\"/key/EISU\">英数</button>"
+    "<button type=\"submit\" formaction=\"/key/HENKAN\">変換</button>"
+    "<button type=\"submit\" formaction=\"/key/MUHENKAN\">無変換</button>"
+    "<button type=\"submit\" formaction=\"/key/KATAKANA_HIRAGANA\">カタカナ/ひらがな</button>"
+    "</div>"
     "</form>"
     "<form method=\"post\" action=\"/shortcut\">"
     "<div class=\"row\">"
@@ -80,9 +88,6 @@ constexpr char kIndexHtml[] =
     "</main>"
     "</body>"
     "</html>";
-
-constexpr char kRedirectBody[] =
-    "<!doctype html><meta charset=\"utf-8\"><meta http-equiv=\"refresh\" content=\"0;url=/\">";
 
 int hex_value(char c) {
     if (c >= '0' && c <= '9') return c - '0';
@@ -360,7 +365,7 @@ void HttpServer::handle_request(void *client_state) {
             url_decode(text);
             text_handler_(text);
         }
-        send_response(state, "303 See Other", "text/html; charset=utf-8", kRedirectBody);
+        send_redirect(state);
         return;
     }
 
@@ -371,7 +376,7 @@ void HttpServer::handle_request(void *client_state) {
             url_decode(key);
             key_handler_(key);
         }
-        send_response(state, "303 See Other", "text/html; charset=utf-8", kRedirectBody);
+        send_redirect(state);
         return;
     }
 
@@ -384,7 +389,7 @@ void HttpServer::handle_request(void *client_state) {
         }
         key[i] = '\0';
         key_handler_(key);
-        send_response(state, "303 See Other", "text/html; charset=utf-8", kRedirectBody);
+        send_redirect(state);
         return;
     }
 
@@ -421,5 +426,33 @@ void HttpServer::send_response(void *client_state, const char *status, const cha
 
     state->bytes_pending = header_len;
     queue_response_body(state);
+    tcp_output(pcb);
+}
+
+void HttpServer::send_redirect(void *client_state) {
+    auto *state = static_cast<ClientState *>(client_state);
+    tcp_pcb *pcb = state->pcb;
+    constexpr char header[] =
+        "HTTP/1.1 303 See Other\r\n"
+        "Location: /\r\n"
+        "Content-Length: 0\r\n"
+        "Cache-Control: no-store\r\n"
+        "Connection: close\r\n"
+        "\r\n";
+
+    state->responded = true;
+    state->response_body = nullptr;
+    state->response_len = 0;
+    state->response_offset = 0;
+
+    const size_t header_len = std::strlen(header);
+    err_t header_err = tcp_write(pcb, header, header_len, TCP_WRITE_FLAG_COPY);
+    if (header_err != ERR_OK) {
+        state->bytes_pending = 0;
+        close_connection(pcb);
+        return;
+    }
+
+    state->bytes_pending = header_len;
     tcp_output(pcb);
 }

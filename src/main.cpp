@@ -196,6 +196,20 @@ uint8_t parse_keycode(const char *key) {
     if (key[0] == 'K' && key[1] == 'P' && key[2] >= '0' && key[2] <= '9' && key[3] == '\0') {
         return key[2] == '0' ? HID_KEY_KEYPAD_0 : HID_KEY_KEYPAD_1 + (key[2] - '1');
     }
+    if (strcmp(key, "RO") == 0 || strcmp(key, "JIS_RO") == 0) return HID_KEY_KANJI1;
+    if (strcmp(key, "KATAKANA_HIRAGANA") == 0 || strcmp(key, "KATAHIRA") == 0) return HID_KEY_KANJI2;
+    if (strcmp(key, "YEN") == 0 || strcmp(key, "JIS_YEN") == 0) return HID_KEY_KANJI3;
+    if (strcmp(key, "HENKAN") == 0 || strcmp(key, "CONVERT") == 0) return HID_KEY_KANJI4;
+    if (strcmp(key, "MUHENKAN") == 0 || strcmp(key, "NONCONVERT") == 0) return HID_KEY_KANJI5;
+    if (strcmp(key, "KANA") == 0 || strcmp(key, "KANA_MODE") == 0) return HID_KEY_LANG1;
+    if (strcmp(key, "EISU") == 0 || strcmp(key, "EISUU") == 0 || strcmp(key, "ALPHANUMERIC") == 0) return HID_KEY_LANG2;
+    if (strcmp(key, "KATAKANA") == 0) return HID_KEY_LANG3;
+    if (strcmp(key, "HIRAGANA") == 0) return HID_KEY_LANG4;
+    if (strcmp(key, "HANKAKU") == 0 || strcmp(key, "ZENKAKU") == 0 ||
+        strcmp(key, "HANKAKU_ZENKAKU") == 0 || strcmp(key, "ZENKAKU_HANKAKU") == 0 ||
+        strcmp(key, "ZENKAKUHANKAKU") == 0 || strcmp(key, "KANJI") == 0) {
+        return HID_KEY_LANG5;
+    }
 
     return 0;
 }

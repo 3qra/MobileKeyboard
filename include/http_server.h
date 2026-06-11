@@ -21,6 +21,7 @@ private:
     static void error_callback(void *arg, err_t err);
     void handle_request(void *client_state);
     void send_response(void *client_state, const char *status, const char *content_type, const char *body);
+    void send_redirect(void *client_state);
 
     TextHandler text_handler_ = nullptr;
     KeyHandler key_handler_ = nullptr;
