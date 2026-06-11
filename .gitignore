@@ -157,6 +157,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# MobileKeyboard local build settings
+mobile_keyboard.local.cmake
+
 # Spyder project settings
 .spyderproject
 .spyproject

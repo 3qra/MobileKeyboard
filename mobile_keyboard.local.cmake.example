@@ -1,0 +1,5 @@
+# Copy this file to mobile_keyboard.local.cmake and edit it.
+# mobile_keyboard.local.cmake is ignored by git.
+
+set(MOBILEKBD_WIFI_SSID "PicoKeyboard" CACHE STRING "Wi-Fi access point SSID" FORCE)
+set(MOBILEKBD_WIFI_PASSWORD "change-this-password" CACHE STRING "Wi-Fi access point password" FORCE)
