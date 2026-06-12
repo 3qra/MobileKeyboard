@@ -229,7 +229,7 @@ This avoids normal form submission and reduces HTTP form-submission warnings on 
 ## 現時点の制限 / Current Limitations
 
 - 文字列入力はASCII中心である。 / Text input is mainly ASCII-oriented.
-- HIDの通常キー配列はUS配列基準である。 / Normal HID key mapping is based on a US keyboard layout.
+- `TEXT` で送る記号のキーマップはJIS配列（mac日本語配列向け）基準である。 / Symbol mapping for `TEXT` input follows a JIS layout (for macOS Japanese keyboard layout).
 - 日本語入力はPC側OSのキーボードレイアウトとIME状態に依存する。 / Japanese input depends on the host OS keyboard layout and IME state.
 - HTTPで配信しているため、ブラウザの「安全ではない」表示自体は消えない。 / Because the UI is served over HTTP, the browser's "Not Secure" indicator itself cannot be removed.
 - Pico WHはAPモードで動作する。 / The Pico WH runs in AP mode.
